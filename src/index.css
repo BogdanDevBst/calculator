@@ -15,8 +15,12 @@ body {
   box-shadow: 10px 10px 5px #c67655;
 }
 
-.output {
+.result {
   background-color: #34394d;
+}
+
+.numbers {
+  background-color: #eeeeee;
 }
 
 .gray-operator {
