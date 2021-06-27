@@ -1,94 +1,117 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Result from './components/Result';
 
 import './App.css';
+import Button from './components/Button';
 
 const App = () => {
-  const [result, setResult] = useState('');
+  const [firstNumber, setFirstNumber] = useState('');
+  const [secondNumber, setSecondNumber] = useState('');
 
-  const handleClick = e => {
-    setResult(result.concat(e.target.name));
-  };
+  const [operation, setOperation] = useState('');
 
-  const backspace = () => {
-    setResult(result.slice(0, result.length - 1));
-  };
+  const [result, setResult] = useState(0);
 
-  const clear = () => {
-    setResult('');
-  };
+  useEffect(() => {
+    console.log(result);
+  }, [result]);
 
-  const handleCalculation = e => {
-    if (e.target.name === '=') {
-      setResult();
+  const clickNumbers = val => {
+    if (operation === '') {
+      setFirstNumber(firstNumber + val);
+    } else {
+      setSecondNumber(secondNumber + val);
     }
+  };
+
+  const clickOperation = val => {
+    setOperation(val);
+  };
+
+  const performOperation = () => {
+    // eslint-disable-next-line default-case
+    switch (operation) {
+      case '+':
+        setResult(Number(firstNumber) + Number(secondNumber));
+        break;
+      case '-':
+        setResult(Number(firstNumber) - Number(secondNumber));
+        break;
+      case '*':
+        setResult(Number(firstNumber) * Number(secondNumber));
+        break;
+      case '/':
+        setResult(Number(firstNumber) / Number(secondNumber));
+        break;
+    }
+  };
+  const backspace = () => {
+    setResult(result.slice(0, -1));
+  };
+
+  const clearInput = () => {
+    setResult('');
   };
 
   return (
     <div className="container calculator">
       <div className="m-10 box-shadow rounded-md">
         <Result value={result} />
-        <div className="grid grid-cols-4 divide-x divide-y rounded-b-md">
-          <button name="C" className="gray-operator p-6" onClick={clear}>
-            C
-          </button>
-          <button name="+/-" className="gray-operator p-6" onClick={handleClick}>
-            +/-
-          </button>
-          <button name="%" className="gray-operator p-6" onClick={handleClick}>
-            %
-          </button>
-          <button name="/" className="orange-operator p-6" onClick={handleClick}>
-            &divide;
-          </button>
-          <button name="7" className="numbers p-6" onClick={handleClick}>
-            7
-          </button>
-          <button name="8" className="numbers p-6" onClick={handleClick}>
-            8
-          </button>
-          <button name="9" className="numbers p-6" onClick={handleClick}>
-            9
-          </button>
-          <button name="x" className="orange-operator p-6" onClick={handleClick}>
-            &times;
-          </button>
-          <button name="4" className="numbers p-6" onClick={handleClick}>
-            4
-          </button>
-          <button name="5" className="numbers p-6" onClick={handleClick}>
-            5
-          </button>
-          <button name="6" className="numbers p-6" onClick={handleClick}>
-            6
-          </button>
-          <button name="-" className="orange-operator p-6" onClick={handleClick}>
-            &ndash;
-          </button>
-          <button name="1" className="numbers p-6" onClick={handleClick}>
-            1
-          </button>
-          <button name="2" className="numbers p-6" onClick={handleClick}>
-            2
-          </button>
-          <button name="3" className="numbers p-6" onClick={handleClick}>
-            3
-          </button>
-          <button name="+" className="orange-operator p-6" onClick={handleClick}>
-            +
-          </button>
-          <button name="0" className="numbers rounded-bl-md p-6" onClick={handleClick}>
-            0
-          </button>
-          <button name="." className="numbers p-6" onClick={handleClick}>
-            .
-          </button>
-          <button name="<-" className="numbers p-6" onClick={backspace}>
-            🥷
-          </button>
-          <button className="orange-equal rounded-br-md p-6" onClick={handleCalculation}>
-            =
-          </button>
+        <div className="">
+          <div className="grid grid-cols-4 divide-x divide-y rounded-b-md">
+            <Button type="gray" click={clearInput}>
+              C
+            </Button>
+            <Button type="gray" click={clickOperation}>
+              +/-
+            </Button>
+            <Button type="gray" click={clickOperation}>
+              %
+            </Button>
+            <Button type="orange">&divide;</Button>
+            <Button type="ivory" click={clickNumbers}>
+              7
+            </Button>
+            <Button type="ivory" click={clickNumbers}>
+              8
+            </Button>
+            <Button type="ivory" click={clickNumbers}>
+              9
+            </Button>
+            <Button type="orange">&times;</Button>
+            <Button type="ivory" click={clickNumbers}>
+              4
+            </Button>
+            <Button type="ivory" click={clickNumbers}>
+              5
+            </Button>
+            <Button type="ivory" click={clickNumbers}>
+              6
+            </Button>
+            <Button type="orange">&minus;</Button>
+            <Button type="ivory" click={clickNumbers}>
+              1
+            </Button>
+            <Button type="ivory" click={clickNumbers}>
+              2
+            </Button>
+            <Button type="ivory" click={clickNumbers}>
+              3
+            </Button>
+            <Button type="orange">+</Button>
+            <Button className="numbers rounded-bl-md p-6" click={clickNumbers}>
+              0
+            </Button>
+            <Button type="ivory" click={clickOperation}>
+              .
+            </Button>
+            <Button type="ivory" click={backspace}>
+              🥷
+            </Button>
+            <Button type="darkOrange" click={performOperation}>
+              =
+            </Button>
+          </div>
         </div>
       </div>
     </div>
