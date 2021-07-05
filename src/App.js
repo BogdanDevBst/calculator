@@ -7,91 +7,90 @@ import Button from './components/Button';
 import './App.css';
 
 const App = () => {
-  const [preState, setPreState] = useState('');
-  const [curState, setCurState] = useState('');
+  const [prevState, setPrevState] = useState('');
+  const [currState, setCurrState] = useState('');
   const [input, setInput] = useState('0');
   const [operator, setOperator] = useState(null);
   const [total, setTotal] = useState(false);
 
   const inputNum = e => {
-    if (curState.includes('.') && e.target.innerText === '.') return;
+    if (currState.includes('.') && e.target.innerText === '.') return;
 
     if (total) {
-      setPreState('');
+      setPrevState('');
     }
-
-    curState ? setCurState(pre => pre + e.target.innerText) : setCurState(e.target.innerText);
+    setCurrState(prev => prev + e.target.innerText);
     setTotal(false);
   };
 
   useEffect(() => {
-    setInput(curState);
-  }, [curState]);
+    setInput(currState);
+  }, [currState, prevState]);
 
   useEffect(() => {
     setInput('0');
   }, []);
 
-  const operatorType = e => {
+  const setOperatorType = e => {
     setTotal(false);
     setOperator(e.target.innerText);
-    if (curState === '') return;
-    if (preState !== '') {
-      equals();
+    if (currState === '') return;
+    if (prevState !== '') {
+      calculateResult();
     } else {
-      setPreState(curState);
-      setCurState('');
+      setPrevState(currState);
+      setCurrState('');
     }
   };
 
-  const equals = e => {
+  const calculateResult = e => {
     if (e?.target.innerText === '=') {
       setTotal(true);
     }
-    let cal;
+    let calc;
     switch (operator) {
       case '/':
-        cal = String(parseFloat(preState) / parseFloat(curState));
+        calc = String(parseFloat(prevState) / parseFloat(currState));
         break;
 
       case '+':
-        cal = String(parseFloat(preState) + parseFloat(curState));
+        calc = String(parseFloat(prevState) + parseFloat(currState));
         break;
       case 'X':
-        cal = String(parseFloat(preState) * parseFloat(curState));
+        calc = String(parseFloat(prevState) * parseFloat(currState));
         break;
       case '-':
-        cal = String(parseFloat(preState) - parseFloat(curState));
+        calc = String(parseFloat(prevState) - parseFloat(currState));
         break;
       default:
         return;
     }
     setInput('');
-    setPreState(cal);
-    setCurState('');
+    setPrevState(calc);
+    setCurrState('');
   };
 
   const minusPlus = () => {
-    if (curState.charAt(0) === '-') {
-      setCurState(curState.substring(1));
+    if (currState.charAt(0) === '-') {
+      setCurrState(currState.substring(1));
     } else {
-      setCurState('-' + curState);
+      setCurrState('-' + currState);
     }
   };
 
   const percent = () => {
-    preState
-      ? setCurState(String((parseFloat(curState) / 100) * preState))
-      : setCurState(String(parseFloat(curState) / 100));
+    prevState
+      ? setCurrState(String((parseFloat(currState) / 100) * prevState))
+      : setCurrState(String(parseFloat(currState) / 100));
   };
 
-  const backspace = () => {
+  const deleteLast = () => {
     setInput(input.slice(0, -1));
   };
 
   const reset = () => {
-    setPreState('');
-    setCurState('');
+    setPrevState('');
+    setCurrState('');
     setInput('0');
   };
 
@@ -102,7 +101,7 @@ const App = () => {
           {input !== '' || input === '0' ? (
             <NumberFormat value={input} displayType={'text'} thousandSeparator={true} />
           ) : (
-            <NumberFormat value={preState} displayType={'text'} thousandSeparator={true} />
+            <NumberFormat value={prevState} displayType={'text'} thousandSeparator={true} />
           )}
         </Result>
         <div className="">
@@ -116,7 +115,7 @@ const App = () => {
             <Button type="gray" click={percent}>
               %
             </Button>
-            <Button type="orange" click={operatorType}>
+            <Button type="orange" click={setOperatorType}>
               /
             </Button>
             <Button type="ivory" click={inputNum}>
@@ -128,7 +127,7 @@ const App = () => {
             <Button type="ivory" click={inputNum}>
               9
             </Button>
-            <Button type="orange" click={operatorType}>
+            <Button type="orange" click={setOperatorType}>
               X
             </Button>
             <Button type="ivory" click={inputNum}>
@@ -140,7 +139,7 @@ const App = () => {
             <Button type="ivory" click={inputNum}>
               6
             </Button>
-            <Button type="orange" click={operatorType}>
+            <Button type="orange" click={setOperatorType}>
               -
             </Button>
             <Button type="ivory" click={inputNum}>
@@ -152,7 +151,7 @@ const App = () => {
             <Button type="ivory" click={inputNum}>
               3
             </Button>
-            <Button type="orange" click={operatorType}>
+            <Button type="orange" click={setOperatorType}>
               +
             </Button>
             <Button className="numbers rounded-bl-md p-6" click={inputNum}>
@@ -161,10 +160,10 @@ const App = () => {
             <Button type="ivory" click={inputNum}>
               .
             </Button>
-            <Button type="ivory" click={backspace}>
+            <Button type="ivory" click={deleteLast}>
               🥷
             </Button>
-            <Button type="darkOrange" click={equals}>
+            <Button type="darkOrange" click={calculateResult}>
               =
             </Button>
           </div>
