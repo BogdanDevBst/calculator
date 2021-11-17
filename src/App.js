@@ -14,8 +14,9 @@ const App = () => {
   const [total, setTotal] = useState(false);
 
   const inputNum = e => {
-    if (currState.includes('.') && e.target.innerText === '.') return;
-
+    if (currState.includes('.') && e.target.innerText === '.') {
+      return null;
+    }
     if (total) {
       setPrevState('');
     }
